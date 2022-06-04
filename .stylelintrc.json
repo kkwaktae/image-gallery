@@ -1,0 +1,16 @@
+{
+  "extends": [
+    "stylelint-config-standard-scss",
+    "stylelint-config-recess-order",
+    "stylelint-config-prettier-scss"
+  ],
+  "plugins": ["stylelint-declaration-strict-value"],
+  "rules": {
+    "scale-unlimited/declaration-strict-value": [
+      ["background-color", "color", "background"],
+      { "ignoreValues": ["transparent", "inherit", "initial"] }
+    ],
+    "selector-class-pattern": "^[a-z][a-zA-Z0-9]+$",
+    "scss/dollar-variable-empty-line-before": null
+  }
+}

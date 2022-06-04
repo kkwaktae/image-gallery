@@ -1,0 +1,7 @@
+@use 'src/styles/constants/colors.scss';
+
+.app {
+  width: 360px;
+  height: 640px;
+  background-color: colors.$theme4;
+}
