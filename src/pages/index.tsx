@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 
-import Main from './Main';
+import Home from './Home';
 import Favorite from './Favorite';
 import NotFound from './NotFound';
 import styles from './app.module.scss';
@@ -9,7 +9,7 @@ function App() {
   return (
     <div className={styles.app}>
       <Routes>
-        <Route path="/" element={<Main />} />
+        <Route path="/" element={<Home />} />
         <Route path="favorite" element={<Favorite />}>
           <Route index element={<Favorite />} />
           <Route path="list" element={<Favorite />} />

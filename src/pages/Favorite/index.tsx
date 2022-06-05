@@ -6,7 +6,7 @@ function Favorite() {
   return (
     <>
       <nav>
-        <Link to="/">Main</Link>
+        <Link to="/">Home</Link>
         <Link to="/favorite">Favorite</Link>
       </nav>
       <main className={styles.favoriteWrapper}>

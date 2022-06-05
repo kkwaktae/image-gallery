@@ -1,0 +1,93 @@
+@use 'src/styles/constants/colors.scss';
+
+.main {
+  width: 100%;
+  height: 500px;
+
+  .mainWrapper {
+    width: 100%;
+    height: 100%;
+
+    .searchSection {
+      width: 100%;
+      height: 120px;
+
+      .searchTitle {
+        height: 40px;
+
+        h2 {
+          height: 40px;
+          font-size: 26px;
+          font-weight: bold;
+          line-height: 40px;
+          color: colors.$theme5;
+        }
+      }
+
+      .searchBox {
+        position: relative;
+        height: 40px;
+        margin: 20px 0;
+
+        .searchIcon {
+          position: absolute;
+          left: 8px;
+          width: 14px;
+        }
+
+        .searchBar {
+          width: 100%;
+          height: 40px;
+          padding: 0 30px;
+          padding-right: 80px;
+          font-size: 16px;
+          line-height: 40px;
+          letter-spacing: 0.01em;
+          background-color: colors.$white;
+
+          &::placeholder {
+            position: relative;
+            top: -2px;
+            font-size: 12px;
+            font-weight: 200;
+            line-height: normal;
+            color: colors.$gray-light-100;
+          }
+        }
+
+        .searchBtn {
+          position: absolute;
+          top: 6px;
+          right: 5px;
+          width: 60px;
+          height: 28px;
+          font-size: 11px;
+          font-weight: 300;
+          line-height: 28px;
+          color: colors.$white;
+          letter-spacing: 0.01em;
+          background-color: colors.$theme4-1;
+          border: none;
+          outline: none;
+        }
+      }
+    }
+
+    .listSection {
+      display: flex;
+      width: 100%;
+      height: 380px;
+      overflow-y: auto;
+
+      .listBox {
+        width: 100%;
+        padding: 20px;
+        margin-right: 10px;
+
+        &:last-of-type {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+}
