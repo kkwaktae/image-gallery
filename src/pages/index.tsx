@@ -1,5 +1,4 @@
 import { Routes, Route } from 'react-router-dom';
-
 import Home from './Home';
 import Favorite from './Favorite';
 import NotFound from './NotFound';

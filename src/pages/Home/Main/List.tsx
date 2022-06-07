@@ -1,48 +1,52 @@
-import { fetchImageData } from 'service/imageDataApi';
+import { useEffect, useState } from 'react';
 
-import cx from 'classnames';
+import { useQuery } from 'react-query';
+import { fetchData } from 'service/imageDataApi';
 
 import styles from './styles.module.scss';
 
 function List() {
-  const getImageData = async () => {
-    const { data } = await fetchImageData('curated', { page: 1 });
-    console.log(data);
-    console.log('test');
-  };
-  console.log('aaa');
+  const [imageData, setImageData] = useState<Photo[]>([]);
 
-  // getImageData();
+  console.log(imageData);
 
-  const imageData = [
-    { id: '1', image: 'aa' },
-    { id: '2', image: 'bb' },
-    { id: '3', image: 'cc' },
-  ];
-  const imageList = imageData.map((content) => {
-    const key = `content-${content.id}`;
+  const { data, isLoading } = useQuery(['images'], () => fetchData(), {
+    staleTime: 2 * 60 * 1000,
+    refetchOnWindowFocus: true,
+  });
+
+  useEffect(() => {
+    if (!data) return;
+    setImageData((prev) => [...prev, ...data.photos]);
+  }, [data]);
+
+  if (isLoading) {
+    return <h2>Loading...</h2>;
+  }
+
+  const imageList = imageData.map((content, idx) => {
+    const key = `content-${idx + 1}`;
     return (
       <li key={key} className={styles.imageItem}>
-        {content.image}
+        <button className={styles.imageButton} type="button">
+          <figure>
+            <img
+              className={styles.image}
+              src={`${content.src.tiny}`}
+              alt={`${content.alt}`}
+            />
+            <figcaption>{content.alt}</figcaption>
+          </figure>
+        </button>
       </li>
     );
   });
 
-  const gridArr = [
-    { id: 1, line: 'column1' },
-    { id: 2, line: 'column2' },
-  ];
-
-  const gridLine = gridArr.map((grid) => {
-    const key = `grid-${grid.id}`;
-    return (
-      <ul key={key} className={cx(styles.listBox, styles[grid.line])}>
-        {imageList}
-      </ul>
-    );
-  });
-
-  return <section className={styles.listSection}>{gridLine}</section>;
+  return (
+    <section className={styles.listSection}>
+      <ul className={styles.listBox}>{imageList}</ul>
+    </section>
+  );
 }
 
 export default List;

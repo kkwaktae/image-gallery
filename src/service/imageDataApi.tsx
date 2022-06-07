@@ -1,18 +1,14 @@
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 
-const instance = axios.create({
-  baseURL: 'https://api.pexels.com/v1/',
+const instance: AxiosInstance = axios.create({
+  baseURL: 'https://api.pexels.com/v1',
   timeout: 30 * 1000,
-  headers: {
-    Authorization: process.env.REACT_APP_API_KEY as string,
-  },
+  headers: { Authorization: process.env.REACT_APP_API_KEY as string },
 });
 
-interface Params {
-  page?: number;
-  per_page?: number;
-}
-
-export const fetchImageData = async (url: string, params: Params) => {
-  return instance.get(url, { params });
+export const fetchData = async () => {
+  const { data } = await instance.get<Response>('/curated', {
+    params: { page: 1, per_page: 30 },
+  });
+  return data;
 };

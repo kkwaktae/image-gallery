@@ -1,4 +1,4 @@
-interface ImageSrc {
+interface Src {
   original: string;
   large2x: string;
   large: string;
@@ -9,7 +9,7 @@ interface ImageSrc {
   tiny: string;
 }
 
-interface ImageData {
+interface Photo {
   id: number;
   width: number;
   height: number;
@@ -18,7 +18,14 @@ interface ImageData {
   photographer_url: string;
   photographer_id: number;
   avg_color: string;
-  src: ImageSrc;
+  src: Src;
   liked: boolean;
   alt: string;
+}
+
+interface Response {
+  page: number;
+  per_page: number;
+  photos: Photo[];
+  next_page: string;
 }

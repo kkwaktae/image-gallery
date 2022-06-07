@@ -42,6 +42,7 @@
           padding-right: 80px;
           font-size: 16px;
           line-height: 40px;
+          color: colors.$gray-strong-dark;
           letter-spacing: 0.01em;
           background-color: colors.$white;
 
@@ -80,12 +81,55 @@
       overflow-y: auto;
 
       .listBox {
-        width: 100%;
-        padding: 20px;
-        margin-right: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        width: inherit;
 
-        &:last-of-type {
-          margin-right: 0;
+        .imageItem {
+          width: 47%;
+          margin-top: 6%;
+          transition: all 0.3s ease;
+
+          &:nth-of-type(2n) {
+            margin-left: 6%;
+          }
+
+          &:hover .imageButton figure figcaption {
+            display: block;
+          }
+
+          &:hover .imageButton figure img {
+            filter: grayscale(100%);
+          }
+
+          .imageButton {
+            width: 100%;
+
+            figure {
+              position: relative;
+              width: inherit;
+
+              .image {
+                width: inherit;
+                vertical-align: bottom;
+                border: none;
+              }
+
+              figcaption {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                display: none;
+                width: inherit;
+                padding: 10px;
+                font-size: 11px;
+                font-weight: 200;
+                color: colors.$white;
+                letter-spacing: 0.01em;
+                transform: translate(-50%, -50%);
+              }
+            }
+          }
         }
       }
     }
