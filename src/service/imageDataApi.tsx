@@ -6,9 +6,12 @@ const instance: AxiosInstance = axios.create({
   headers: { Authorization: process.env.REACT_APP_API_KEY as string },
 });
 
-export const fetchData = async () => {
-  const { data } = await instance.get<Response>('/curated', {
-    params: { page: 1, per_page: 30 },
-  });
+interface Params {
+  page: number;
+  per_page?: number;
+}
+
+export const fetchData = async (params: Params) => {
+  const { data } = await instance.get<Response>('/curated', { params });
   return data;
 };
