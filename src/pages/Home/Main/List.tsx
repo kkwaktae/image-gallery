@@ -1,7 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { filtedData, imageDataRes, searchResult } from 'store/atom';
-import { useQuery } from 'react-query';
+import { filterState, imageDataRes, pageState, searchResult } from 'store/atom';
 
 import { fetchData } from 'service/imageDataApi';
 
@@ -9,17 +8,13 @@ import styles from './styles.module.scss';
 
 function List() {
   const [imageData, setImageData] = useRecoilState(imageDataRes);
-  const filtedImageData = useRecoilValue(filtedData);
   const searchValue = useRecoilValue(searchResult);
-  const [page, setPage] = useState(1);
+  const isFiltering = useRecoilValue(filterState);
+  const [page, setPage] = useRecoilState(pageState);
 
   const imageBoxRef = useRef<HTMLDivElement | null>(null);
   const observeTargetRef = useRef<HTMLLIElement | null>(null);
 
-  console.log(imageData);
-  console.log(page);
-
-  // useQuery 사용 X
   useEffect(() => {
     const getImageData = async () => {
       const data = await fetchData({ page, per_page: 30 });
@@ -27,19 +22,6 @@ function List() {
     };
     getImageData();
   }, [page, setImageData]);
-
-  // const { data, isLoading } = useQuery(
-  //   ['images', page],
-  //   () => fetchData({ page, per_page: 30 }),
-  //   {
-  //     staleTime: Infinity,
-  //   }
-  // );
-
-  // useEffect(() => {
-  //   if (!data) return;
-  //   setImageData((prev) => [...prev, ...data.photos]);
-  // }, [data, setImageData]);
 
   useEffect(() => {
     const options = {
@@ -50,8 +32,6 @@ function List() {
 
     const observer = new IntersectionObserver(([entry], observer) => {
       const target = entry;
-
-      // if (target.isIntersecting && !isLoading && data?.next_page) {
       if (target.isIntersecting && imageData.length > 0) {
         setPage((prev) => prev + 1);
         observer.unobserve(entry.target);
@@ -62,20 +42,21 @@ function List() {
     return () => {
       observer.disconnect();
     };
-    // }, [data, isLoading]);
-  }, [imageData]);
+  }, [imageData, setPage]);
 
-  // 페이지를 전역상태화
+  const resultData = imageData.filter((img) => {
+    const filterOption = img.alt.toUpperCase().replace(/ /g, '');
+    const filterData = isFiltering
+      ? filterOption.length > 0 &&
+        filterOption.includes(searchValue.toUpperCase().trim())
+      : true;
+    return filterData;
+  });
 
-  // 버튼클릭시 필터링
+  console.log(imageData);
+  console.log(resultData);
 
-  // 필터 아이템 갯수 부족시 페이지 증가
-
-  // const resultData = imageData.filter(()=>{
-  //   return isFilter ? 필터조건 === true인 배열 : true;
-  // })
-
-  const imageList = imageData.map((content, idx) => {
+  const imageList = resultData.map((content, idx) => {
     const key = `content-${idx}`;
     return (
       <li key={key} className={styles.imageItem} data-id={idx}>

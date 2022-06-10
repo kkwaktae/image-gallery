@@ -1,15 +1,17 @@
 import { ChangeEvent, FormEvent } from 'react';
 import { useRecoilState } from 'recoil';
-import { searchResult } from 'store/atom';
+import { filterState, searchResult } from 'store/atom';
 
 import { SearchIcon } from 'assets/svgs';
 import styles from './styles.module.scss';
 
 function Search() {
   const [searchState, setSearchState] = useRecoilState(searchResult);
+  const [isFiltering, setIsFiltering] = useRecoilState(filterState);
 
   const onsubmitSearch = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsFiltering(true);
   };
 
   const onChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
