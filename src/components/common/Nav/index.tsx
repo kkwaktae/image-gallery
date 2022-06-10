@@ -20,7 +20,7 @@ function Nav() {
           <Link to="/">Main</Link>
         </li>
         <li className={styles.routerLink}>
-          <Link to="/favorite">favorite</Link>
+          <Link to="/favorite">Favorite</Link>
         </li>
       </ul>
     </nav>

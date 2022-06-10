@@ -142,6 +142,13 @@
             }
           }
         }
+
+        .observeTarget {
+          width: 100%;
+          height: 30px;
+
+          // background: linear-gradient(colors.$transparent, colors.$black);
+        }
       }
     }
   }
