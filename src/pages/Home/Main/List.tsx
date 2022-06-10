@@ -11,7 +11,7 @@ function List() {
   const [imageData, setImageData] = useRecoilState(imageDataRes);
   const filtedImageData = useRecoilValue(filtedData);
   const searchValue = useRecoilValue(searchResult);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
 
   const imageBoxRef = useRef<HTMLDivElement | null>(null);
   const observeTargetRef = useRef<HTMLLIElement | null>(null);
@@ -19,18 +19,27 @@ function List() {
   console.log(imageData);
   console.log(page);
 
-  const { data, isLoading } = useQuery(
-    ['images', page],
-    () => fetchData({ page, per_page: 30 }),
-    {
-      staleTime: Infinity,
-    }
-  );
-
+  // useQuery 사용 X
   useEffect(() => {
-    if (!data) return;
-    setImageData((prev) => [...prev, ...data.photos]);
-  }, [data, setImageData]);
+    const getImageData = async () => {
+      const data = await fetchData({ page, per_page: 30 });
+      setImageData((prev) => [...prev, ...data.photos]);
+    };
+    getImageData();
+  }, [page, setImageData]);
+
+  // const { data, isLoading } = useQuery(
+  //   ['images', page],
+  //   () => fetchData({ page, per_page: 30 }),
+  //   {
+  //     staleTime: Infinity,
+  //   }
+  // );
+
+  // useEffect(() => {
+  //   if (!data) return;
+  //   setImageData((prev) => [...prev, ...data.photos]);
+  // }, [data, setImageData]);
 
   useEffect(() => {
     const options = {
@@ -38,11 +47,14 @@ function List() {
       rootMargin: '0px 0px 40px 0px',
       threshold: 1,
     };
-    const observer = new IntersectionObserver(([entry]) => {
+
+    const observer = new IntersectionObserver(([entry], observer) => {
       const target = entry;
 
-      if (target.isIntersecting && !isLoading && data?.next_page) {
+      // if (target.isIntersecting && !isLoading && data?.next_page) {
+      if (target.isIntersecting && imageData.length > 0) {
         setPage((prev) => prev + 1);
+        observer.unobserve(entry.target);
       }
     }, options);
     if (observeTargetRef?.current) observer.observe(observeTargetRef.current);
@@ -50,7 +62,8 @@ function List() {
     return () => {
       observer.disconnect();
     };
-  }, [data, isLoading]);
+    // }, [data, isLoading]);
+  }, [imageData]);
 
   // 페이지를 전역상태화
 
@@ -84,9 +97,7 @@ function List() {
     <section className={styles.listSection} ref={imageBoxRef}>
       <ul className={styles.listBox}>
         {imageList}
-        <li className={styles.observeTarget} ref={observeTargetRef}>
-          Loading...
-        </li>
+        <li className={styles.observeTarget} ref={observeTargetRef} />
       </ul>
     </section>
   );

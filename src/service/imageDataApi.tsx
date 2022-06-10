@@ -12,6 +12,6 @@ interface Params {
 }
 
 export const fetchData = async (params: Params) => {
-  const { data } = await instance.get<Response>('/curated', { params });
-  return data;
+  const res = await instance.get<Response>('/curated', { params });
+  return res.data;
 };
