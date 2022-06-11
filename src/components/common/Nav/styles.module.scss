@@ -31,12 +31,16 @@
         padding: 4px 8px;
         font-size: 14px;
         font-weight: 400;
-        line-height: 32px;
+        line-height: 31px;
         color: colors.$theme6;
         text-align: center;
         text-decoration: none;
         letter-spacing: 0.02em;
         border-bottom: 1px solid colors.$transparent;
+
+        &.selected {
+          border-bottom: 1px solid colors.$theme6;
+        }
       }
     }
   }

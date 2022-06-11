@@ -1,5 +1,30 @@
 import { atom } from 'recoil';
 
+export const selectedDataPhotographerUrl = atom<string | undefined>({
+  key: 'selectedDataPhotographerUrl',
+  default: '',
+});
+
+export const selectedDataPhotographer = atom<string | undefined>({
+  key: 'selectedDataPhotographer',
+  default: '',
+});
+
+export const selectedDataUrl = atom<string | undefined>({
+  key: 'selectedDataUrl',
+  default: '',
+});
+
+export const selectedDataAlt = atom<string | undefined>({
+  key: 'selectedDataAlt',
+  default: '',
+});
+
+export const selectedDataSrc = atom<string | undefined>({
+  key: 'selectedDataSrc',
+  default: '',
+});
+
 export const modalState = atom<boolean>({
   key: 'modalState',
   default: false,

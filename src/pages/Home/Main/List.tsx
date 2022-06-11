@@ -8,9 +8,15 @@ import {
   pageState,
   perPageState,
   searchResult,
+  selectedDataAlt,
+  selectedDataPhotographer,
+  selectedDataPhotographerUrl,
+  selectedDataSrc,
+  selectedDataUrl,
 } from 'store/atom';
-
 import { fetchData } from 'service/imageDataApi';
+
+import cx from 'classnames';
 
 import Portal from 'components/common/Portal';
 import Modal from 'components/common/Modal';
@@ -31,9 +37,17 @@ function List() {
   const searchState = useRecoilValue(searchResult);
   const isFiltering = useRecoilValue(filterState);
 
-  const [selectedSrc, setSelectedSrc] = useState('');
-  const [selectedAlt, setSelectedAlt] = useState('');
   const [onModal, setOnModal] = useRecoilState(modalState);
+
+  const [selectedSrc, setSelectedSrc] = useRecoilState(selectedDataSrc);
+  const [selectedAlt, setSelectedAlt] = useRecoilState(selectedDataAlt);
+  const [selectedUrl, setSelectedUrl] = useRecoilState(selectedDataUrl);
+  const [selectedPhotographer, setSelectedPhotographer] = useRecoilState(
+    selectedDataPhotographer
+  );
+  const [selectedPhotographerUrl, setSelectedPhotographerUrl] = useRecoilState(
+    selectedDataPhotographerUrl
+  );
 
   const [showInfoIcon, setShowInfoIcon] = useState(false);
   const [showFavoriteIcon, setShowFavoriteIcon] = useState(false);
@@ -95,17 +109,27 @@ function List() {
   }, [resultData, setPage]);
 
   const onClickImage = (e: MouseEvent<HTMLLIElement>) => {
-    const dataSrc = e.currentTarget.dataset.src as string;
-    const dataAlt = e.currentTarget.dataset.alt as string;
+    const dataSrc = e.currentTarget.dataset.src;
+    const dataAlt = e.currentTarget.dataset.alt;
+    const dataUrl = e.currentTarget.dataset.url;
+    const dataPhotographer = e.currentTarget.dataset.photographer;
+    const dataPhotographerUrl = e.currentTarget.dataset.photographerurl;
 
     setOnModal(!onModal);
     setSelectedSrc(dataSrc);
     setSelectedAlt(dataAlt);
+    setSelectedUrl(dataUrl);
+    setSelectedPhotographer(dataPhotographer);
+    setSelectedPhotographerUrl(dataPhotographerUrl);
   };
 
   const handleModal = () => {
     setOnModal(!onModal);
   };
+
+  useEffect(() => {
+    if (!onModal) setShowInfoIcon(false);
+  }, [onModal]);
 
   const onClickInfoIcon = () => {
     setShowInfoIcon(!showInfoIcon);
@@ -124,8 +148,12 @@ function List() {
         className={styles.imageItem}
         data-id={idx}
         onClick={onClickImage}
+        data-like={`${content.liked}`}
         data-src={`${content.src.medium}`}
         data-alt={`${content.alt}`}
+        data-url={`${content.url}`}
+        data-photographer={`${content.photographer}`}
+        data-photographerurl={`${content.photographer_url}`}
       >
         <button className={styles.imageButton} type="submit">
           <figure>
@@ -158,10 +186,39 @@ function List() {
               className={styles.modalContent}
               style={{ backgroundImage: `url(${selectedSrc})` }}
             >
-              <div className={styles.modalGradient} />
+              <dl
+                className={cx(styles.modalImageContainer, {
+                  [styles.isShow]: showInfoIcon,
+                })}
+              >
+                <div className={styles.imageUrl}>
+                  <dt>Image URL</dt>
+                  <dd>
+                    <a href={`${selectedUrl}`} target="_blank" rel="noreferrer">
+                      {selectedUrl}
+                    </a>
+                  </dd>
+                </div>
+                <div className={styles.photographerName}>
+                  <dt>Photographer</dt>
+                  <dd>{selectedPhotographer}</dd>
+                </div>
+                <div className={styles.photographerUrl}>
+                  <dt>Photographer&#39;s URL</dt>
+                  <dd>
+                    <a
+                      href={`${selectedPhotographerUrl}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {selectedPhotographerUrl}
+                    </a>
+                  </dd>
+                </div>
+              </dl>
               <button
                 type="button"
-                className={styles.imageInfo}
+                className={styles.imageInfoButton}
                 aria-label="image-information-open-button"
                 onClick={onClickInfoIcon}
               >
@@ -173,7 +230,7 @@ function List() {
               </button>
               <button
                 type="button"
-                className={styles.favorite}
+                className={styles.favoriteButton}
                 aria-label="favorite-button"
                 onClick={onClickFavoriteIcon}
               >
