@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   filterData,
@@ -11,6 +11,8 @@ import {
 
 import { fetchData } from 'service/imageDataApi';
 
+import Portal from 'components/common/Portal';
+import Modal from 'components/common/Modal';
 import styles from './styles.module.scss';
 
 function List() {
@@ -20,6 +22,7 @@ function List() {
   const searchState = useRecoilValue(searchResult);
   const [filtedImageData, setFiltedImageData] = useRecoilState(filterData);
   const isFiltering = useRecoilValue(filterState);
+  const [onModal, setOnModal] = useState(false);
 
   const imageBoxRef = useRef<HTMLDivElement | null>(null);
   const observeTargetRef = useRef<HTMLLIElement | null>(null);
@@ -77,10 +80,9 @@ function List() {
     };
   }, [resultData, setPage]);
 
-  const onClickImage = (e: MouseEvent<HTMLLIElement>) => {
-    console.log(e);
+  const handleModal = () => {
+    setOnModal(!onModal);
   };
-
   const imageList = resultData.map((content, idx) => {
     const key = `content-${idx}`;
     return (
@@ -89,7 +91,7 @@ function List() {
         key={key}
         className={styles.imageItem}
         data-id={idx}
-        onClick={onClickImage}
+        onClick={handleModal}
       >
         <button className={styles.imageButton} type="submit">
           <figure>
@@ -98,6 +100,7 @@ function List() {
               src={`${content.src.tiny}`}
               alt={`${content.alt}`}
               data-id={idx}
+              data-src={`${content.src.original}`}
             />
             <figcaption>{content.alt}</figcaption>
           </figure>
@@ -107,12 +110,15 @@ function List() {
   });
 
   return (
-    <section className={styles.listSection} ref={imageBoxRef}>
-      <ul className={styles.listBox}>
-        {imageList}
-        <li className={styles.observeTarget} ref={observeTargetRef} />
-      </ul>
-    </section>
+    <>
+      <section className={styles.listSection} ref={imageBoxRef}>
+        <ul className={styles.listBox}>
+          {imageList}
+          <li className={styles.observeTarget} ref={observeTargetRef} />
+        </ul>
+      </section>
+      <Portal>{onModal && <Modal onClose={handleModal}>모달</Modal>}</Portal>
+    </>
   );
 }
 
