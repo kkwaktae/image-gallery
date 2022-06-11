@@ -1,9 +1,10 @@
-import { MouseEvent, useEffect, useRef } from 'react';
+import { MouseEvent, useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   filterData,
   filterState,
   imageDataRes,
+  modalState,
   pageState,
   perPageState,
   searchResult,
@@ -11,15 +12,22 @@ import {
 
 import { fetchData } from 'service/imageDataApi';
 
+import Portal from 'components/common/Portal';
+import Modal from 'components/common/Modal';
 import styles from './styles.module.scss';
 
 function List() {
   const [imageData, setImageData] = useRecoilState(imageDataRes);
   const [page, setPage] = useRecoilState(pageState);
+  const [filtedImageData, setFiltedImageData] = useRecoilState(filterData);
+
   const perPage = useRecoilValue(perPageState);
   const searchState = useRecoilValue(searchResult);
-  const [filtedImageData, setFiltedImageData] = useRecoilState(filterData);
   const isFiltering = useRecoilValue(filterState);
+
+  const [onModal, setOnModal] = useRecoilState(modalState);
+  const [selectedSrc, setSelectedSrc] = useState('');
+  const [selectedAlt, setSelectedAlt] = useState('');
 
   const imageBoxRef = useRef<HTMLDivElement | null>(null);
   const observeTargetRef = useRef<HTMLLIElement | null>(null);
@@ -78,7 +86,16 @@ function List() {
   }, [resultData, setPage]);
 
   const onClickImage = (e: MouseEvent<HTMLLIElement>) => {
-    console.log(e);
+    const dataSrc = e.currentTarget.dataset.src as string;
+    const dataAlt = e.currentTarget.dataset.alt as string;
+
+    setOnModal(!onModal);
+    setSelectedSrc(dataSrc);
+    setSelectedAlt(dataAlt);
+  };
+
+  const handleModal = () => {
+    setOnModal(!onModal);
   };
 
   const imageList = resultData.map((content, idx) => {
@@ -90,6 +107,8 @@ function List() {
         className={styles.imageItem}
         data-id={idx}
         onClick={onClickImage}
+        data-src={`${content.src.medium}`}
+        data-alt={`${content.alt}`}
       >
         <button className={styles.imageButton} type="submit">
           <figure>
@@ -98,6 +117,7 @@ function List() {
               src={`${content.src.tiny}`}
               alt={`${content.alt}`}
               data-id={idx}
+              draggable="false"
             />
             <figcaption>{content.alt}</figcaption>
           </figure>
@@ -107,12 +127,26 @@ function List() {
   });
 
   return (
-    <section className={styles.listSection} ref={imageBoxRef}>
-      <ul className={styles.listBox}>
-        {imageList}
-        <li className={styles.observeTarget} ref={observeTargetRef} />
-      </ul>
-    </section>
+    <>
+      <section className={styles.listSection} ref={imageBoxRef}>
+        <ul className={styles.listBox}>
+          {imageList}
+          <li className={styles.observeTarget} ref={observeTargetRef} />
+        </ul>
+      </section>
+      <Portal>
+        {onModal && (
+          <Modal onClose={handleModal}>
+            <div
+              className={styles.modalContent}
+              style={{ backgroundImage: `url(${selectedSrc})` }}
+            >
+              <div className={styles.modalGradient} />
+            </div>
+          </Modal>
+        )}
+      </Portal>
+    </>
   );
 }
 

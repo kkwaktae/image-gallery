@@ -1,5 +1,10 @@
 import { atom } from 'recoil';
 
+export const modalState = atom<boolean>({
+  key: 'modalState',
+  default: false,
+});
+
 export const filterState = atom<boolean>({
   key: 'filterState',
   default: false,
