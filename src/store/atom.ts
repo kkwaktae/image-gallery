@@ -1,13 +1,33 @@
 import { atom } from 'recoil';
 
-export const filtedData = atom<Photo[]>({
-  key: 'filtedData',
-  default: [],
+export const modalState = atom<boolean>({
+  key: 'modalState',
+  default: false,
+});
+
+export const filterState = atom<boolean>({
+  key: 'filterState',
+  default: false,
+});
+
+export const perPageState = atom<number>({
+  key: 'perPageState',
+  default: 30,
+});
+
+export const pageState = atom<number>({
+  key: 'pageState',
+  default: 1,
 });
 
 export const searchResult = atom<string>({
   key: 'searchResult',
   default: '',
+});
+
+export const filterData = atom<Photo[]>({
+  key: 'filterData',
+  default: [],
 });
 
 export const imageDataRes = atom<Photo[]>({

@@ -1,36 +1,68 @@
-import { useEffect, useRef, useState } from 'react';
+import { MouseEvent, useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { filtedData, imageDataRes, searchResult } from 'store/atom';
-import { useQuery } from 'react-query';
+import {
+  filterData,
+  filterState,
+  imageDataRes,
+  modalState,
+  pageState,
+  perPageState,
+  searchResult,
+} from 'store/atom';
 
 import { fetchData } from 'service/imageDataApi';
 
+import Portal from 'components/common/Portal';
+import Modal from 'components/common/Modal';
 import styles from './styles.module.scss';
 
 function List() {
   const [imageData, setImageData] = useRecoilState(imageDataRes);
-  const filtedImageData = useRecoilValue(filtedData);
-  const searchValue = useRecoilValue(searchResult);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useRecoilState(pageState);
+  const [filtedImageData, setFiltedImageData] = useRecoilState(filterData);
+
+  const perPage = useRecoilValue(perPageState);
+  const searchState = useRecoilValue(searchResult);
+  const isFiltering = useRecoilValue(filterState);
+
+  const [onModal, setOnModal] = useRecoilState(modalState);
+  const [selectedSrc, setSelectedSrc] = useState('');
+  const [selectedAlt, setSelectedAlt] = useState('');
 
   const imageBoxRef = useRef<HTMLDivElement | null>(null);
   const observeTargetRef = useRef<HTMLLIElement | null>(null);
 
-  console.log(imageData);
-  console.log(page);
-
-  const { data, isLoading } = useQuery(
-    ['images', page],
-    () => fetchData({ page, per_page: 30 }),
-    {
-      staleTime: Infinity,
-    }
-  );
-
   useEffect(() => {
-    if (!data) return;
-    setImageData((prev) => [...prev, ...data.photos]);
-  }, [data, setImageData]);
+    if (!isFiltering) {
+      const getImageData = async () => {
+        const data = await fetchData({ page, per_page: perPage });
+        setImageData((prev) => [...prev, ...data.photos]);
+        setFiltedImageData([]);
+      };
+      getImageData();
+    } else {
+      const getImageData = async () => {
+        const data = await fetchData({ page, per_page: perPage });
+        const filterDataList = data.photos.filter((img) => {
+          const filterOption = img.alt.toUpperCase().replace(/ /g, '');
+          return filterOption.includes(searchState.toUpperCase().trim());
+        });
+        setFiltedImageData((prev) => [...prev, ...filterDataList]);
+        setImageData([]);
+      };
+      getImageData();
+    }
+  }, [
+    page,
+    setPage,
+    perPage,
+    setImageData,
+    setFiltedImageData,
+    isFiltering,
+    searchState,
+  ]);
+
+  const resultData = !isFiltering ? imageData : filtedImageData;
 
   useEffect(() => {
     const options = {
@@ -38,11 +70,12 @@ function List() {
       rootMargin: '0px 0px 40px 0px',
       threshold: 1,
     };
-    const observer = new IntersectionObserver(([entry]) => {
-      const target = entry;
 
-      if (target.isIntersecting && !isLoading && data?.next_page) {
+    const observer = new IntersectionObserver(([entry], observer) => {
+      const target = entry;
+      if (target.isIntersecting && resultData.length > 0) {
         setPage((prev) => prev + 1);
+        observer.unobserve(entry.target);
       }
     }, options);
     if (observeTargetRef?.current) observer.observe(observeTargetRef.current);
@@ -50,28 +83,41 @@ function List() {
     return () => {
       observer.disconnect();
     };
-  }, [data, isLoading]);
+  }, [resultData, setPage]);
 
-  // 페이지를 전역상태화
+  const onClickImage = (e: MouseEvent<HTMLLIElement>) => {
+    const dataSrc = e.currentTarget.dataset.src as string;
+    const dataAlt = e.currentTarget.dataset.alt as string;
 
-  // 버튼클릭시 필터링
+    setOnModal(!onModal);
+    setSelectedSrc(dataSrc);
+    setSelectedAlt(dataAlt);
+  };
 
-  // 필터 아이템 갯수 부족시 페이지 증가
+  const handleModal = () => {
+    setOnModal(!onModal);
+  };
 
-  // const resultData = imageData.filter(()=>{
-  //   return isFilter ? 필터조건 === true인 배열 : true;
-  // })
-
-  const imageList = imageData.map((content, idx) => {
+  const imageList = resultData.map((content, idx) => {
     const key = `content-${idx}`;
     return (
-      <li key={key} className={styles.imageItem} data-id={idx}>
-        <button className={styles.imageButton} type="button">
+      <li
+        role="presentation"
+        key={key}
+        className={styles.imageItem}
+        data-id={idx}
+        onClick={onClickImage}
+        data-src={`${content.src.medium}`}
+        data-alt={`${content.alt}`}
+      >
+        <button className={styles.imageButton} type="submit">
           <figure>
             <img
               className={styles.image}
               src={`${content.src.tiny}`}
               alt={`${content.alt}`}
+              data-id={idx}
+              draggable="false"
             />
             <figcaption>{content.alt}</figcaption>
           </figure>
@@ -81,14 +127,26 @@ function List() {
   });
 
   return (
-    <section className={styles.listSection} ref={imageBoxRef}>
-      <ul className={styles.listBox}>
-        {imageList}
-        <li className={styles.observeTarget} ref={observeTargetRef}>
-          Loading...
-        </li>
-      </ul>
-    </section>
+    <>
+      <section className={styles.listSection} ref={imageBoxRef}>
+        <ul className={styles.listBox}>
+          {imageList}
+          <li className={styles.observeTarget} ref={observeTargetRef} />
+        </ul>
+      </section>
+      <Portal>
+        {onModal && (
+          <Modal onClose={handleModal}>
+            <div
+              className={styles.modalContent}
+              style={{ backgroundImage: `url(${selectedSrc})` }}
+            >
+              <div className={styles.modalGradient} />
+            </div>
+          </Modal>
+        )}
+      </Portal>
+    </>
   );
 }
 
