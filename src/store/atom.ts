@@ -5,6 +5,11 @@ export const filterState = atom<boolean>({
   default: false,
 });
 
+export const perPageState = atom<number>({
+  key: 'perPageState',
+  default: 30,
+});
+
 export const pageState = atom<number>({
   key: 'pageState',
   default: 1,
