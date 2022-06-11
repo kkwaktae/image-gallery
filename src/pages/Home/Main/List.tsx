@@ -14,6 +14,12 @@ import { fetchData } from 'service/imageDataApi';
 
 import Portal from 'components/common/Portal';
 import Modal from 'components/common/Modal';
+import {
+  CircleDownIcon,
+  FavoriteAfterIcon,
+  FavoriteBeforeIcon,
+  PendingIcon,
+} from 'assets/svgs';
 import styles from './styles.module.scss';
 
 function List() {
@@ -25,9 +31,12 @@ function List() {
   const searchState = useRecoilValue(searchResult);
   const isFiltering = useRecoilValue(filterState);
 
-  const [onModal, setOnModal] = useRecoilState(modalState);
   const [selectedSrc, setSelectedSrc] = useState('');
   const [selectedAlt, setSelectedAlt] = useState('');
+  const [onModal, setOnModal] = useRecoilState(modalState);
+
+  const [showInfoIcon, setShowInfoIcon] = useState(false);
+  const [showFavoriteIcon, setShowFavoriteIcon] = useState(false);
 
   const imageBoxRef = useRef<HTMLDivElement | null>(null);
   const observeTargetRef = useRef<HTMLLIElement | null>(null);
@@ -98,6 +107,14 @@ function List() {
     setOnModal(!onModal);
   };
 
+  const onClickInfoIcon = () => {
+    setShowInfoIcon(!showInfoIcon);
+  };
+
+  const onClickFavoriteIcon = () => {
+    setShowFavoriteIcon(!showFavoriteIcon);
+  };
+
   const imageList = resultData.map((content, idx) => {
     const key = `content-${idx}`;
     return (
@@ -142,6 +159,30 @@ function List() {
               style={{ backgroundImage: `url(${selectedSrc})` }}
             >
               <div className={styles.modalGradient} />
+              <button
+                type="button"
+                className={styles.imageInfo}
+                aria-label="image-information-open-button"
+                onClick={onClickInfoIcon}
+              >
+                {showInfoIcon ? (
+                  <CircleDownIcon className={styles.foldIcon} />
+                ) : (
+                  <PendingIcon className={styles.infoIcon} />
+                )}
+              </button>
+              <button
+                type="button"
+                className={styles.favorite}
+                aria-label="favorite-button"
+                onClick={onClickFavoriteIcon}
+              >
+                {showFavoriteIcon ? (
+                  <FavoriteAfterIcon className={styles.favoriteAfter} />
+                ) : (
+                  <FavoriteBeforeIcon className={styles.favoriteBefore} />
+                )}
+              </button>
             </div>
           </Modal>
         )}

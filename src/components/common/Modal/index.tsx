@@ -2,8 +2,8 @@ import { ReactNode, useEffect, useRef } from 'react';
 import { useRecoilState } from 'recoil';
 import { modalState } from 'store/atom';
 
+import { CancelIcon } from 'assets/svgs';
 import Portal from '../Portal';
-
 import styles from './styles.module.scss';
 
 interface Props {
@@ -36,8 +36,13 @@ function Modal({ children, onClose }: Props) {
       >
         <div className={styles.modalBox}>
           {children}
-          <button type="button" className={styles.close} onClick={onClose}>
-            close
+          <button
+            type="button"
+            className={styles.close}
+            onClick={onClose}
+            aria-label="close-modal-button"
+          >
+            <CancelIcon className={styles.cancelIcon} />
           </button>
         </div>
       </div>

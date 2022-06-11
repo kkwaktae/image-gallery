@@ -21,16 +21,13 @@
 
     .close {
       position: absolute;
-      bottom: 10px;
-      left: calc(50% - 27px);
-      width: 54px;
-      height: 30px;
-      font-size: 12px;
-      font-weight: 200;
-      line-height: 28px;
-      color: colors.$white;
-      letter-spacing: 0.05em;
-      border: 1px solid colors.$white;
+      top: -40px;
+      right: 0;
+
+      .cancelIcon {
+        width: 30px;
+        height: 30px;
+      }
     }
   }
 }
