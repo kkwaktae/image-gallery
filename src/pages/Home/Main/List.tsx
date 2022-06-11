@@ -1,6 +1,13 @@
-import { useEffect, useRef } from 'react';
+import { MouseEvent, useEffect, useRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { filterState, imageDataRes, pageState, searchResult } from 'store/atom';
+import {
+  filterData,
+  filterState,
+  imageDataRes,
+  pageState,
+  perPageState,
+  searchResult,
+} from 'store/atom';
 
 import { fetchData } from 'service/imageDataApi';
 
@@ -8,20 +15,46 @@ import styles from './styles.module.scss';
 
 function List() {
   const [imageData, setImageData] = useRecoilState(imageDataRes);
-  const searchValue = useRecoilValue(searchResult);
-  const isFiltering = useRecoilValue(filterState);
   const [page, setPage] = useRecoilState(pageState);
+  const perPage = useRecoilValue(perPageState);
+  const searchState = useRecoilValue(searchResult);
+  const [filtedImageData, setFiltedImageData] = useRecoilState(filterData);
+  const isFiltering = useRecoilValue(filterState);
 
   const imageBoxRef = useRef<HTMLDivElement | null>(null);
   const observeTargetRef = useRef<HTMLLIElement | null>(null);
 
   useEffect(() => {
-    const getImageData = async () => {
-      const data = await fetchData({ page, per_page: 30 });
-      setImageData((prev) => [...prev, ...data.photos]);
-    };
-    getImageData();
-  }, [page, setImageData]);
+    if (!isFiltering) {
+      const getImageData = async () => {
+        const data = await fetchData({ page, per_page: perPage });
+        setImageData((prev) => [...prev, ...data.photos]);
+        setFiltedImageData([]);
+      };
+      getImageData();
+    } else {
+      const getImageData = async () => {
+        const data = await fetchData({ page, per_page: perPage });
+        const filterDataList = data.photos.filter((img) => {
+          const filterOption = img.alt.toUpperCase().replace(/ /g, '');
+          return filterOption.includes(searchState.toUpperCase().trim());
+        });
+        setFiltedImageData((prev) => [...prev, ...filterDataList]);
+        setImageData([]);
+      };
+      getImageData();
+    }
+  }, [
+    page,
+    setPage,
+    perPage,
+    setImageData,
+    setFiltedImageData,
+    isFiltering,
+    searchState,
+  ]);
+
+  const resultData = !isFiltering ? imageData : filtedImageData;
 
   useEffect(() => {
     const options = {
@@ -32,7 +65,7 @@ function List() {
 
     const observer = new IntersectionObserver(([entry], observer) => {
       const target = entry;
-      if (target.isIntersecting && imageData.length > 0) {
+      if (target.isIntersecting && resultData.length > 0) {
         setPage((prev) => prev + 1);
         observer.unobserve(entry.target);
       }
@@ -42,30 +75,29 @@ function List() {
     return () => {
       observer.disconnect();
     };
-  }, [imageData, setPage]);
+  }, [resultData, setPage]);
 
-  const resultData = imageData.filter((img) => {
-    const filterOption = img.alt.toUpperCase().replace(/ /g, '');
-    const filterData = isFiltering
-      ? filterOption.length > 0 &&
-        filterOption.includes(searchValue.toUpperCase().trim())
-      : true;
-    return filterData;
-  });
-
-  console.log(imageData);
-  console.log(resultData);
+  const onClickImage = (e: MouseEvent<HTMLLIElement>) => {
+    console.log(e);
+  };
 
   const imageList = resultData.map((content, idx) => {
     const key = `content-${idx}`;
     return (
-      <li key={key} className={styles.imageItem} data-id={idx}>
-        <button className={styles.imageButton} type="button">
+      <li
+        role="presentation"
+        key={key}
+        className={styles.imageItem}
+        data-id={idx}
+        onClick={onClickImage}
+      >
+        <button className={styles.imageButton} type="submit">
           <figure>
             <img
               className={styles.image}
               src={`${content.src.tiny}`}
               alt={`${content.alt}`}
+              data-id={idx}
             />
             <figcaption>{content.alt}</figcaption>
           </figure>
