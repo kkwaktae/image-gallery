@@ -9,13 +9,28 @@
   justify-content: center;
   width: 360px;
   height: 640px;
-  background-color: colors.$shadow;
+  background-color: colors.$shadow-80;
   transform: translate(-50%, -50%);
   backdrop-filter: blur(2px);
 
-  .modalContent {
-    width: 300px;
-    height: 400px;
-    background-color: colors.$white;
+  .modalBox {
+    position: relative;
+    width: 320px;
+    height: 460px;
+    box-shadow: 0 0 5px colors.$shadow-white;
+
+    .close {
+      position: absolute;
+      bottom: 10px;
+      left: calc(50% - 27px);
+      width: 54px;
+      height: 30px;
+      font-size: 12px;
+      font-weight: 200;
+      line-height: 28px;
+      color: colors.$white;
+      letter-spacing: 0.05em;
+      border: 1px solid colors.$white;
+    }
   }
 }
