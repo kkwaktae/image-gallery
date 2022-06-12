@@ -1,30 +1,5 @@
 import { atom } from 'recoil';
 
-export const selectedDataPhotographerUrl = atom<string | undefined>({
-  key: 'selectedDataPhotographerUrl',
-  default: '',
-});
-
-export const selectedDataPhotographer = atom<string | undefined>({
-  key: 'selectedDataPhotographer',
-  default: '',
-});
-
-export const selectedDataUrl = atom<string | undefined>({
-  key: 'selectedDataUrl',
-  default: '',
-});
-
-export const selectedDataAlt = atom<string | undefined>({
-  key: 'selectedDataAlt',
-  default: '',
-});
-
-export const selectedDataSrc = atom<string | undefined>({
-  key: 'selectedDataSrc',
-  default: '',
-});
-
 export const modalState = atom<boolean>({
   key: 'modalState',
   default: false,
@@ -48,6 +23,37 @@ export const pageState = atom<number>({
 export const searchResult = atom<string>({
   key: 'searchResult',
   default: '',
+});
+
+export const favoriteData = atom<Photo>({
+  key: 'favoriteData',
+  default: {
+    id: 0,
+    width: 0,
+    height: 0,
+    url: '',
+    photographer: '',
+    photographer_url: '',
+    photographer_id: 0,
+    avg_color: '',
+    src: {
+      original: '',
+      large2x: '',
+      large: '',
+      medium: '',
+      small: '',
+      portrait: '',
+      landscape: '',
+      tiny: '',
+    },
+    liked: false,
+    alt: '',
+  },
+});
+
+export const favoriteDataList = atom<Photo[]>({
+  key: 'favoriteDataList',
+  default: [],
 });
 
 export const filterData = atom<Photo[]>({
