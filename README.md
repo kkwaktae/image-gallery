@@ -1,4 +1,6 @@
 # image-gallery
+* 이미지를 검색하고 보관할 수 있는 앱입니다.
+
 
 ## 배포 링크
 * [Vercel](https://image-gallery-dusky.vercel.app/)
