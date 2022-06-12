@@ -13,6 +13,7 @@
 <span><img src="https://img.shields.io/badge/ReactRouter-CA4245?style=flat-square&logo=ReactRouter&logoColor=white"/></span>
 <span><img src="https://img.shields.io/badge/recoil-FFFF00?style=flat-square&logo=recoil&logoColor=white"/></span>
 <span><img src="https://img.shields.io/badge/classnames-000000?style=flat-square&logoColor=white"/></span>
+<span><img src="https://img.shields.io/badge/axios-000000?style=flat-square&logoColor=white"/></span>
 
 ## 실행 화면과 기능
 
