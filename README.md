@@ -24,6 +24,8 @@
 ![image](https://user-images.githubusercontent.com/89800985/173222624-73f87c54-fa85-429f-b136-02bfa93006a4.png)
 
 
+
+
 ### 키워드 검색 및 스크롤 기능 / FormEvent 및 Intersection Observer(무한 스크롤) 활용
 * Search 버튼을 클릭하거나 'Enter' key 입력 시 검색 기능이 작동하도록 구현했습니다.
 * API response data의 alt를 기반으로 검색 기능을 구현했기 때문에, 영어로만 검색이 가능합니다.
@@ -31,6 +33,8 @@
 * 이미지 리스트 형태로 검색 결과가 나타나도록 구현했습니다.
 
 ![image](https://user-images.githubusercontent.com/89800985/173227309-bb442fc2-b518-4bd6-8a05-2703abe8fcfa.png)
+
+
 
 
 ### 이미지 클릭 시 상세 정보 화면 / Modal Portal 활용
@@ -41,10 +45,14 @@
 ![image](https://user-images.githubusercontent.com/89800985/173227390-a2c2d76d-d35a-4320-a103-9b65b2e8cba8.png)
 
 
+
+
 ### 즐겨찾기 아이콘 클릭 시(진행중) / dataset 및 localStorage 활용  
 * 아이콘 클릭 시 아이콘 색상이 변경되며, 해당 이미지 정보를 localStorage에 저장한 뒤, Favorite 페이지에서 리스트화 합니다.
 
 ![image](https://user-images.githubusercontent.com/89800985/173227400-43cbc222-336b-4bd7-b2c7-1de436c426a6.png)
+
+
 
 
 ### 이미지 정보 더보기 아이콘 클릭 시
@@ -52,6 +60,7 @@
 * 아이콘 재클릭 시 정보를 다시 숨길 수 있습니다.
 
 ![image](https://user-images.githubusercontent.com/89800985/173227438-0ebc54f4-202c-4757-bb8d-8ad515661180.png)
+
 
 
 
