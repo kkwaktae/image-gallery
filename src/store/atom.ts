@@ -25,8 +25,8 @@ export const searchResult = atom<string>({
   default: '',
 });
 
-export const favoriteData = atom<Photo>({
-  key: 'favoriteData',
+export const selectedData = atom<Photo>({
+  key: 'selectedData',
   default: {
     id: 0,
     width: 0,

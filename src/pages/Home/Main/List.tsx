@@ -1,7 +1,6 @@
 import { MouseEvent, useEffect, useRef } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import {
-  favoriteData,
   filterData,
   filterState,
   imageDataRes,
@@ -9,6 +8,7 @@ import {
   pageState,
   perPageState,
   searchResult,
+  selectedData,
 } from 'store/atom';
 import { fetchData } from 'service/imageDataApi';
 
@@ -19,7 +19,7 @@ function List() {
   const [imageData, setImageData] = useRecoilState(imageDataRes);
   const [page, setPage] = useRecoilState(pageState);
   const [filtedImageData, setFiltedImageData] = useRecoilState(filterData);
-  const setFavoriteImage = useSetRecoilState(favoriteData);
+  const setSelectedImage = useSetRecoilState(selectedData);
   const [onModal, setOnModal] = useRecoilState(modalState);
 
   const perPage = useRecoilValue(perPageState);
@@ -84,8 +84,8 @@ function List() {
 
   const onClickImage = (e: MouseEvent<HTMLLIElement>) => {
     const { id } = e.currentTarget.dataset;
-    const favoriteImageObj = resultData[Number(id)];
-    setFavoriteImage(favoriteImageObj);
+    const selectedImageObj = resultData[Number(id)];
+    setSelectedImage(selectedImageObj);
     setOnModal(!onModal);
   };
 

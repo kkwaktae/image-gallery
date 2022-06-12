@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { favoriteData, favoriteDataList, modalState } from 'store/atom';
+import { favoriteDataList, modalState, selectedData } from 'store/atom';
 
 import cx from 'classnames';
 
@@ -16,17 +16,24 @@ import styles from './styles.module.scss';
 
 function DetailImage() {
   const [onModal, setOnModal] = useRecoilState(modalState);
-  const [favoriteImage, setFavoriteImage] = useRecoilState(favoriteData);
+  const [selectedImage, setSelectedImage] = useRecoilState(selectedData);
   const [favoriteImageList, setFavoriteImageList] =
     useRecoilState(favoriteDataList);
   const [showInfoIcon, setShowInfoIcon] = useState(false);
+  const [showLikeIcon, setShowLikeIcon] = useState(false);
 
-  const { src, url, photographer, liked, id } = favoriteImage;
-  const photographerURL = favoriteImage.photographer_url;
+  const { src, url, photographer, liked, id } = selectedImage;
+  const photographerURL = selectedImage.photographer_url;
 
   useEffect(() => {
     if (!onModal) setShowInfoIcon(false);
-  }, [onModal]);
+    const activeFavoriteIcon = favoriteImageList.find((img) => {
+      return img.id === selectedImage.id;
+    });
+
+    if (activeFavoriteIcon?.liked) setShowLikeIcon(true);
+    else setShowLikeIcon(false);
+  }, [onModal, selectedImage, favoriteImageList, setShowLikeIcon]);
 
   const handleModal = () => {
     setOnModal(!onModal);
@@ -37,7 +44,7 @@ function DetailImage() {
   };
 
   const onClickFavoriteIcon = () => {
-    setFavoriteImage((prev) => ({
+    setSelectedImage((prev) => ({
       ...prev,
       liked: !liked,
     }));
@@ -45,20 +52,18 @@ function DetailImage() {
     const targetIndex = favoriteImageList.findIndex(
       (target) => target.id === id
     );
-    console.log(targetIndex);
 
     if (targetIndex === -1) {
       setFavoriteImageList((prev) => [
-        { ...favoriteImage, liked: !liked },
+        { ...selectedImage, liked: !liked },
         ...prev,
       ]);
     } else if (targetIndex !== -1) {
-      setFavoriteImageList((prev) => [...prev].splice(targetIndex, 1));
-      // favoriteImageList.splice(targetIndex, 1);
+      setFavoriteImageList((prev) => {
+        return [...prev].filter((img) => img.id !== id);
+      });
     }
   };
-  console.log(favoriteImageList);
-
   return (
     <Portal>
       {onModal && (
@@ -115,7 +120,7 @@ function DetailImage() {
               aria-label="favorite-button"
               onClick={onClickFavoriteIcon}
             >
-              {liked ? (
+              {showLikeIcon ? (
                 <FavoriteAfterIcon className={styles.favoriteAfter} />
               ) : (
                 <FavoriteBeforeIcon className={styles.favoriteBefore} />
