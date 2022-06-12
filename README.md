@@ -15,7 +15,8 @@
 
 ## 실행 화면과 기능
 * 최초 실행 화면
-* ![image](https://user-images.githubusercontent.com/89800985/173222624-73f87c54-fa85-429f-b136-02bfa93006a4.png)
+
+![image](https://user-images.githubusercontent.com/89800985/173222624-73f87c54-fa85-429f-b136-02bfa93006a4.png)
 
 
 
