@@ -9,11 +9,7 @@ function App() {
     <div className={styles.app}>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="favorite" element={<Favorite />}>
-          <Route index element={<Favorite />} />
-          <Route path="list" element={<Favorite />} />
-          <Route path="chart" element={<Favorite />} />
-        </Route>
+        <Route path="favorite" element={<Favorite />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>

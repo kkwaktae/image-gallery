@@ -1,0 +1,71 @@
+@use 'src/styles/constants/colors.scss';
+
+.main {
+  width: 100%;
+  height: 500px;
+
+  .mainWrapper {
+    width: 100%;
+    height: 100%;
+
+    .favoriteListWrapper {
+      width: 100%;
+      height: 500px;
+      overflow-y: auto;
+
+      .favoriteListTitle {
+        height: 40px;
+        margin-bottom: 20px;
+
+        h2 {
+          height: 40px;
+          font-size: 26px;
+          font-weight: bold;
+          line-height: 40px;
+          color: colors.$theme5;
+        }
+      }
+
+      .cardBox {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+
+        .favoriteImageItem {
+          width: 100%;
+          margin-bottom: 30px;
+
+          .favoriteImageButton {
+            width: 100%;
+
+            figure {
+              position: relative;
+              width: inherit;
+
+              .favoriteImage {
+                width: inherit;
+                vertical-align: bottom;
+                border: none;
+                transition: all 0.3s ease;
+              }
+
+              figcaption {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                display: none;
+                width: inherit;
+                padding: 10px;
+                font-size: 10px;
+                font-weight: 200;
+                color: colors.$white;
+                letter-spacing: 0.01em;
+                transform: translate(-50%, -50%);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

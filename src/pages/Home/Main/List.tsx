@@ -99,7 +99,7 @@ function List() {
         data-id={idx}
         onClick={onClickImage}
       >
-        <button className={styles.imageButton} type="submit">
+        <button className={styles.imageButton} type="button">
           <figure>
             <img
               className={styles.image}

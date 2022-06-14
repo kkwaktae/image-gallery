@@ -33,6 +33,9 @@ function DetailImage() {
 
     if (activeFavoriteIcon?.liked) setShowLikeIcon(true);
     else setShowLikeIcon(false);
+
+    if (!localStorage.getItem('favorite'))
+      localStorage.setItem('favorite', JSON.stringify([]));
   }, [onModal, selectedImage, favoriteImageList, setShowLikeIcon]);
 
   const handleModal = () => {
@@ -63,7 +66,19 @@ function DetailImage() {
         return [...prev].filter((img) => img.id !== id);
       });
     }
+
+    const favoriteJson = localStorage.getItem('favorite');
+    if (favoriteJson) {
+      const favoriteList = JSON.parse(favoriteJson);
+      if (!favoriteList.find((image: Photo) => image.id === selectedImage.id))
+        favoriteList.unshift(selectedImage);
+      localStorage.setItem('favorite', JSON.stringify(favoriteList));
+    }
+
+    if (!localStorage.getItem('favorite'))
+      localStorage.setItem('favorite', JSON.stringify(selectedImage));
   };
+
   return (
     <Portal>
       {onModal && (
