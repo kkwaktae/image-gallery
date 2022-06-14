@@ -36,14 +36,7 @@ function FavoriteList() {
       <header className={styles.favoriteListTitle}>
         <h2>Favorite List .</h2>
       </header>
-      <ul className={styles.cardBox}>
-        {favorites}
-        <li className={styles.card}>card1</li>
-        <li className={styles.card}>card2</li>
-        <li className={styles.card}>card3</li>
-        <li className={styles.card}>card4</li>
-        <li className={styles.card}>card5</li>
-      </ul>
+      <ul className={styles.cardBox}>{favorites}</ul>
     </section>
   );
 }
